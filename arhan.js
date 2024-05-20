@@ -51,7 +51,7 @@ String.prototype.chr = function () {
 // --- General utilities ---
 // -------------------------
 Object.prototype.cb = function () {
-  globalThis.copy?.(this); // not available everywhere
+  globalThis.copy?.(this.toString()); // not available everywhere
   return this;
 };
 
