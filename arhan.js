@@ -13,11 +13,11 @@ Number.prototype.dec = function () {
 };
 
 Number.prototype.hex = function () {
-  return "0x" + this.toString(16).padStart(2, "0");
+  return this.toString(16).padStart(2, "0");
 };
 
 Number.prototype.bin = function () {
-  return "0b" + this.toString(2).padStart(8, "0");
+  return this.toString(2).padStart(8, "0");
 };
 
 Number.prototype.chr = function () {
