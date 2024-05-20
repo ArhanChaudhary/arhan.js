@@ -5,19 +5,19 @@
  * DevTools.
  */
 
-// ----------------------------
+//
 // --- Conversion functions ---
-// ----------------------------
+//
 Number.prototype.dec = function () {
   return this;
 };
 
 Number.prototype.hex = function () {
-  return this.toString(16);
+  return "0x" + this.toString(16).padStart(2, "0");
 };
 
 Number.prototype.bin = function () {
-  return this.toString(2);
+  return "0b" + this.toString(2).padStart(8, "0");
 };
 
 Number.prototype.chr = function () {
@@ -47,9 +47,9 @@ String.prototype.chr = function () {
   return this.dec().chr();
 };
 
-// -------------------------
+//
 // --- General utilities ---
-// -------------------------
+//
 String.prototype.cp =
   Number.prototype.cp =
   Array.prototype.cp =
@@ -66,9 +66,9 @@ globalThis.nl = "\n"; // :D
 
 globalThis.lg = console.log;
 
-// ----------------------
+//
 // --- Iterator stuff ---
-// ----------------------
+//
 globalThis.xrange = function* (start, end, step = 1) {
   if (end === undefined) {
     end = start;
@@ -103,12 +103,8 @@ String.prototype.chunks = function (n) {
   return this.match(new RegExp(`.{1,${n}}`, "g"));
 };
 
-String.prototype.smap = function (split, map) {
-  return this.split(split).map(map);
-};
-
 String.prototype.smapj = function (split, map) {
-  return this.smap(split, map).join("");
+  return this.split(split).map(map).join("");
 };
 
 console.log("arhan.js loaded");
