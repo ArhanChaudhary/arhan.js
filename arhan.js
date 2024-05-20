@@ -6,7 +6,7 @@
  */
 
 //
-// --- Conversion functions ---
+// Conversion functions
 //
 Number.prototype.dec = function () {
   return this;
@@ -25,12 +25,21 @@ Number.prototype.chr = function () {
 };
 
 String.prototype.dec = function () {
-  if (/^[a-zA-Z]$/.test(this)) {
-    return this.charCodeAt(0);
+  let ret;
+  if (this.length === 1) {
+    ret = this.charCodeAt(0);
+    if (ret < 48 || ret > 57) {
+      return ret;
+    }
   }
-  let ret = Number(this);
+  ret = Number(this);
   if (!Number.isNaN(ret)) {
     return ret;
+  } else {
+    ret = parseInt(this, 16);
+    if (!Number.isNaN(ret)) {
+      return ret;
+    }
   }
   throw new Error("Invalid decimal conversion");
 };
@@ -48,7 +57,7 @@ String.prototype.chr = function () {
 };
 
 //
-// --- General utilities ---
+// General utilities
 //
 String.prototype.cp =
   Number.prototype.cp =
@@ -67,7 +76,7 @@ globalThis.nl = "\n"; // :D
 globalThis.lg = console.log;
 
 //
-// --- Iterator stuff ---
+// Iterator stuff
 //
 globalThis.xrange = function* (start, end, step = 1) {
   if (end === undefined) {
