@@ -1,7 +1,7 @@
 /*
  * arhan.js
  *
- * A collection of my personal JavaScript utility functions for use within
+ * A collection of my personal JavaScript tooling functions for use within
  * DevTools.
  */
 
@@ -50,10 +50,13 @@ String.prototype.chr = function () {
 // -------------------------
 // --- General utilities ---
 // -------------------------
-Object.prototype.cb = function () {
-  globalThis.copy?.(this.toString()); // not available everywhere
-  return this;
-};
+String.prototype.cp =
+  Number.prototype.cp =
+  Array.prototype.cp =
+    function () {
+      globalThis.copy?.(this.toString()); // not available everywhere
+      return this;
+    };
 
 Array.prototype.sum = function () {
   return this.reduce((a, b) => a + b.dec(), 0);
@@ -108,4 +111,4 @@ String.prototype.smapj = function (split, map) {
   return this.smap(split, map).join("");
 };
 
-console.log("arhan.js loaded")
+console.log("arhan.js loaded");
