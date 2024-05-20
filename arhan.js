@@ -107,3 +107,5 @@ String.prototype.smap = function (split, map) {
 String.prototype.smapj = function (split, map) {
   return this.smap(split, map).join("");
 };
+
+console.log("arhan.js loaded")
