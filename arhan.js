@@ -5,7 +5,6 @@
  * DevTools.
  */
 
-// @ts-check
 (() => {
   const cp = {
     get: function () {
@@ -14,7 +13,7 @@
     },
   };
 
-  Object.defineProperties(Number.prototype, {
+  const decimalPrototypes = {
     dec: {
       get: function () {
         return this;
@@ -33,6 +32,10 @@
         );
       },
     },
+  };
+
+  Object.defineProperties(Number.prototype, {
+    ...decimalPrototypes,
     chr: {
       get: function () {
         return String.fromCharCode(this);
@@ -42,24 +45,7 @@
   });
 
   Object.defineProperties(BigInt.prototype, {
-    dec: {
-      get: function () {
-        return this;
-      },
-    },
-    hex: {
-      get: function () {
-        return this.toString(16).padStart(2, "0");
-      },
-    },
-    bin: {
-      get: function () {
-        return this.toString(2).padStart(
-          8 * Math.ceil(this.toString(2).length / 8),
-          "0"
-        );
-      },
-    },
+    ...decimalPrototypes,
     chr: {
       get: function () {
         throw new Error("BigInt does not have a character representation");
@@ -78,13 +64,30 @@
             return ret;
           }
         }
-        ret = Number(this);
+        const interpretAsBinary = this.length % 8 === 0 && /^[01]+$/.test(this);
+        if (interpretAsBinary) {
+          ret = Number("0b" + this);
+        } else {
+          ret = Number(this);
+        }
         if (!Number.isNaN(ret)) {
-          return ret;
+          if (ret <= Number.MAX_SAFE_INTEGER) {
+            return ret;
+          }
+          if (interpretAsBinary) {
+            return BigInt("0b" + this);
+          }
+          return BigInt(this);
         } else {
           ret = parseInt(this, 16);
           if (!Number.isNaN(ret)) {
-            return ret;
+            if (ret <= Number.MAX_SAFE_INTEGER) {
+              return ret;
+            }
+            if (this.startsWith("0x") || this.startsWith("0X")) {
+              return BigInt(this);
+            }
+            return BigInt("0x" + this);
           }
         }
         throw new Error("Invalid decimal conversion");
@@ -106,7 +109,7 @@
       },
     },
     chunks: {
-      value: function (/** @type {number} */ n) {
+      value: function (n) {
         return this.match(new RegExp(`.{1,${n}}`, "g"));
       },
     },
@@ -116,13 +119,7 @@
   Object.defineProperties(Array.prototype, {
     sum: {
       get: function () {
-        return this.reduce(
-          (/** @type {any[]} */ a, /** @type {number} */ b) =>
-            a +
-            // @ts-ignore
-            b.dec,
-          0
-        );
+        return this.reduce((a, b) => a + b.dec, 0);
       },
     },
     cp,
@@ -130,11 +127,7 @@
 
   Object.defineProperties(globalThis, {
     xrange: {
-      value: function* (
-        /** @type {number} */ start,
-        /** @type {number | undefined} */ end,
-        step = 1
-      ) {
+      value: function* (start, end, step = 1) {
         if (end === undefined) {
           end = start;
           start = 0;
@@ -154,12 +147,12 @@
       },
     },
     range: {
-      value: function (/** @type {any[]} */ ...args) {
+      value: function (...args) {
         return [...globalThis.xrange(...args)];
       },
     },
     zip: {
-      value: function (/** @type {any[]} */ ...iterables) {
+      value: function (...iterables) {
         return Array.from(
           { length: Math.min(...iterables.map(({ length }) => length)) },
           (_, i) => iterables.map((x) => x[i])
