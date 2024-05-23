@@ -27,7 +27,10 @@
     },
     bin: {
       get: function () {
-        return this.toString(2).padStart(8 * Math.ceil(this.length / 8), "0");
+        return this.toString(2).padStart(
+          8 * Math.ceil(this.toString(2).length / 8),
+          "0"
+        );
       },
     },
     chr: {
