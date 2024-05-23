@@ -6,7 +6,7 @@
  */
 (() => {
   const cp = {
-    value: function () {
+    get: function () {
       globalThis.copy?.(this.toString()); // not available everywhere
       return this;
     },
@@ -14,22 +14,22 @@
 
   Object.defineProperties(Number.prototype, {
     dec: {
-      value: function () {
+      get: function () {
         return this;
       },
     },
     hex: {
-      value: function () {
+      get: function () {
         return this.toString(16).padStart(2, "0");
       },
     },
     bin: {
-      value: function () {
-        return this.toString(2).padStart(8, "0");
+      get: function () {
+        return this.toString(2).padStart(8 * Math.ceil(this.length / 8), "0");
       },
     },
     chr: {
-      value: function () {
+      get: function () {
         return String.fromCharCode(this);
       },
     },
@@ -38,7 +38,7 @@
 
   Object.defineProperties(String.prototype, {
     dec: {
-      value: function () {
+      get: function () {
         let ret;
         if (this.length === 1) {
           ret = this.charCodeAt(0);
@@ -59,18 +59,18 @@
       },
     },
     hex: {
-      value: function () {
-        return this.dec().hex();
+      get: function () {
+        return this.dec.hex;
       },
     },
     bin: {
-      value: function () {
-        return this.dec().bin();
+      get: function () {
+        return this.dec.bin;
       },
     },
     chr: {
-      value: function () {
-        return this.dec().chr();
+      get: function () {
+        return this.dec.chr;
       },
     },
     chunks: {
@@ -88,8 +88,8 @@
 
   Object.defineProperties(Array.prototype, {
     sum: {
-      value: function () {
-        return this.reduce((a, b) => a + b.dec(), 0);
+      get: function () {
+        return this.reduce((a, b) => a + b.dec, 0);
       },
     },
     cp,
