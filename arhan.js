@@ -41,6 +41,33 @@
     cp,
   });
 
+  Object.defineProperties(BigInt.prototype, {
+    dec: {
+      get: function () {
+        return this;
+      },
+    },
+    hex: {
+      get: function () {
+        return this.toString(16).padStart(2, "0");
+      },
+    },
+    bin: {
+      get: function () {
+        return this.toString(2).padStart(
+          8 * Math.ceil(this.toString(2).length / 8),
+          "0"
+        );
+      },
+    },
+    chr: {
+      get: function () {
+        throw new Error("BigInt does not have a character representation");
+      },
+    },
+    cp,
+  });
+
   Object.defineProperties(String.prototype, {
     dec: {
       get: function () {
