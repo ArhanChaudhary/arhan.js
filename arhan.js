@@ -4,6 +4,8 @@
  * A collection of my personal JavaScript tooling functions for use within
  * DevTools.
  */
+
+// @ts-check
 (() => {
   const cp = {
     get: function () {
@@ -74,13 +76,8 @@
       },
     },
     chunks: {
-      value: function (n) {
+      value: function (/** @type {number} */ n) {
         return this.match(new RegExp(`.{1,${n}}`, "g"));
-      },
-    },
-    smapj: {
-      value: function (split, map) {
-        return this.split(split).map(map).join("");
       },
     },
     cp,
@@ -89,7 +86,13 @@
   Object.defineProperties(Array.prototype, {
     sum: {
       get: function () {
-        return this.reduce((a, b) => a + b.dec, 0);
+        return this.reduce(
+          (/** @type {any[]} */ a, /** @type {number} */ b) =>
+            a +
+            // @ts-ignore
+            b.dec,
+          0
+        );
       },
     },
     cp,
@@ -97,7 +100,11 @@
 
   Object.defineProperties(globalThis, {
     xrange: {
-      value: function* (start, end, step = 1) {
+      value: function* (
+        /** @type {number} */ start,
+        /** @type {number | undefined} */ end,
+        step = 1
+      ) {
         if (end === undefined) {
           end = start;
           start = 0;
@@ -117,12 +124,12 @@
       },
     },
     range: {
-      value: function (...args) {
+      value: function (/** @type {any[]} */ ...args) {
         return [...globalThis.xrange(...args)];
       },
     },
     zip: {
-      value: function (...iterables) {
+      value: function (/** @type {any[]} */ ...iterables) {
         return Array.from(
           { length: Math.min(...iterables.map(({ length }) => length)) },
           (_, i) => iterables.map((x) => x[i])
