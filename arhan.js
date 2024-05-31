@@ -5,7 +5,7 @@
  * DevTools.
  */
 
-(() => {
+(async () => {
   const cp = {
     get: function () {
       globalThis.copy?.(this.toString()); // not available everywhere
@@ -125,7 +125,27 @@
     cp,
   });
 
-  Object.defineProperties(globalThis, {
+  // https://umaranis.com/2018/07/12/calculate-modular-exponentiation-powermod-in-javascript-ap-n/
+  Math.powm = function (base, exponent, modulus) {
+    modulus = BigInt(modulus);
+    if (modulus === 1n) return 0;
+    base = BigInt(base);
+    exponent = BigInt(exponent);
+    let result = 1n;
+    base = base % modulus;
+    while (exponent > 0n) {
+      if (exponent % 2n === 1n) result = (result * base) % modulus;
+      exponent = exponent >> 1n;
+      base = (base * base) % modulus;
+    }
+    if (result <= Number.MAX_SAFE_INTEGER) {
+      return Number(result);
+    }
+    return result;
+  };
+  await new Promise((resolve) => addEventListener("load", resolve));
+
+  let globalThisProperties = {
     xrange: {
       value: function* (start, end, step = 1) {
         if (end === undefined) {
@@ -166,26 +186,14 @@
       // :D
       value: "\n",
     },
-  });
-
-  // https://umaranis.com/2018/07/12/calculate-modular-exponentiation-powermod-in-javascript-ap-n/
-  Math.powm = function (base, exponent, modulus) {
-    modulus = BigInt(modulus);
-    if (modulus === 1n) return 0;
-    base = BigInt(base);
-    exponent = BigInt(exponent);
-    let result = 1n;
-    base = base % modulus;
-    while (exponent > 0n) {
-      if (exponent % 2n === 1n) result = (result * base) % modulus;
-      exponent = exponent >> 1n;
-      base = (base * base) % modulus;
-    }
-    if (result <= Number.MAX_SAFE_INTEGER) {
-      return Number(result);
-    }
-    return result;
   };
+  for (let key of Object.keys(globalThisProperties)) {
+    // use in to check for properties in the prototype chain
+    if (key in globalThis) {
+      throw new Error(`arhan.js: ${key} is already defined`);
+    }
+  }
+  Object.defineProperties(globalThis, globalThisProperties);
 
   console.log("arhan.js loaded");
 })();
