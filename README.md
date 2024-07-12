@@ -5,12 +5,14 @@ A collection of my personal JavaScript tooling utilities for use within Chrome D
 Example usage:
 
 ```js
-> for (i of range(5)) lg(i)
-0
-1
-2
-3
-4
+> for (i of range(0xff+1)) lg(i.hex)
+00
+01
+02
+...
+fd
+fe
+ff
 ```
 
 ```js
