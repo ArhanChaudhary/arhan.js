@@ -122,6 +122,15 @@
         return this.reduce((a, b) => a + b.dec, 0);
       },
     },
+    chunks: {
+      value: function (n) {
+        let ret = [];
+        for (let i = 0; i < this.length; i += n) {
+            ret.push(this.slice(i, i + n));
+        }
+        return ret;
+      }
+    },
     cp,
   });
 
