@@ -5,13 +5,8 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["contentScript.js"]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["arhan.js"],
-      "matches": ["<all_urls>"]
+      "js": ["arhan.js"],
+      "world": "MAIN"
     }
   ]
 }
