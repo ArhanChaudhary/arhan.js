@@ -113,6 +113,11 @@
         return this.match(new RegExp(`.{1,${n}}`, "g"));
       },
     },
+    splitnl: {
+      value: function () {
+        return this.split(/\r?\n/);
+      },
+    },
     cp,
   });
 
@@ -126,10 +131,10 @@
       value: function (n) {
         let ret = [];
         for (let i = 0; i < this.length; i += n) {
-            ret.push(this.slice(i, i + n));
+          ret.push(this.slice(i, i + n));
         }
         return ret;
-      }
+      },
     },
     cp,
   });

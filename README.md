@@ -20,7 +20,7 @@ ff
   3
   5
   7
-  9`.split(nl).sum.cp // copy to clipboard
+  9`.splitnl().sum.cp // copy to clipboard
 Number {25}
 ```
 
